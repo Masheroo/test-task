@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\models\forms\LoginForm;
+use app\models\Session;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -61,7 +62,10 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $sessions = Session::find()->all();
+        return $this->render('index', [
+            'sessions' => $sessions
+        ]);
     }
 
     /**
