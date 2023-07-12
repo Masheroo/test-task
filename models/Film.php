@@ -3,7 +3,10 @@
 namespace app\models;
 
 use Yii;
+use yii\base\Exception;
 use yii\db\ActiveRecord;
+use yii\helpers\BaseFileHelper;
+use yii\web\UploadedFile;
 
 /**
  * This is the model class for table "films".
@@ -19,6 +22,8 @@ use yii\db\ActiveRecord;
  */
 class Film extends ActiveRecord
 {
+    public UploadedFile|string|null $imageFile = null;
+
     /**
      * {@inheritdoc}
      */
@@ -38,6 +43,7 @@ class Film extends ActiveRecord
             [['duration'], 'safe'],
             [['title'], 'string', 'max' => 255],
             [['image'], 'string', 'max' => 10],
+            [['imageFile'], 'image', 'skipOnEmpty' => false, 'extensions' => 'png, jpg'],
             [['age_restriction'], 'string', 'max' => 3],
         ];
     }
@@ -66,4 +72,25 @@ class Film extends ActiveRecord
     {
         return $this->hasMany(Session::class, ['film_id' => 'id']);
     }
+
+    public function getImageFileExtension(): ?string
+    {
+        if (!is_null($this->imageFile)) {
+            return $this->imageFile->extension;
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function saveImage(): void
+    {
+        if (!file_exists(Yii::getAlias('@web') . 'uploads/film')){
+            BaseFileHelper::createDirectory(Yii::getAlias('@web'). 'uploads/film');
+        }
+        $this->imageFile->saveAs(Yii::getAlias('@web'). 'uploads/film/' . $this->id . '.' . $this->image);
+    }
+
 }
