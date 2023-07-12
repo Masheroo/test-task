@@ -4,6 +4,7 @@ namespace app\models;
 
 use Yii;
 use yii\db\ActiveRecord;
+use yii\web\IdentityInterface;
 
 /**
  * This is the model class for table "users".
@@ -13,7 +14,7 @@ use yii\db\ActiveRecord;
  * @property string $password
  * @property string $role
  */
-class User extends ActiveRecord
+class User extends ActiveRecord implements IdentityInterface
 {
     /**
      * {@inheritdoc}
@@ -45,5 +46,40 @@ class User extends ActiveRecord
             'password' => 'Password',
             'role' => 'Role',
         ];
+    }
+    public static function findByLogin($login): ?static
+    {
+        return static::findOne(['login' => $login]);
+
+    }
+
+    public function validatePassword($password)
+    {
+        return $this->password === $password;
+    }
+
+    public static function findIdentity($id)
+    {
+        // TODO: Implement findIdentity() method.
+    }
+
+    public static function findIdentityByAccessToken($token, $type = null)
+    {
+        // TODO: Implement findIdentityByAccessToken() method.
+    }
+
+    public function getId()
+    {
+        // TODO: Implement getId() method.
+    }
+
+    public function getAuthKey()
+    {
+        // TODO: Implement getAuthKey() method.
+    }
+
+    public function validateAuthKey($authKey)
+    {
+        // TODO: Implement validateAuthKey() method.
     }
 }
