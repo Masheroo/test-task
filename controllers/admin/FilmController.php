@@ -82,8 +82,6 @@ class FilmController extends Controller
                 }
 
             }
-        } else {
-            $film->loadDefaultValues();
         }
 
         return $this->render('create', [
