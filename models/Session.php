@@ -32,7 +32,7 @@ class Session extends ActiveRecord
         return [
             [['film_id', 'datetime', 'cost'], 'required'],
             [['film_id', 'cost'], 'integer'],
-            [['datetime'], 'datetime'],
+            [['datetime'], 'datetime', 'format' => 'yyyy-M-d H:m:s'],
             [['film_id'], 'exist', 'skipOnError' => true, 'targetClass' => Film::class, 'targetAttribute' => ['film_id' => 'id']],
         ];
     }

@@ -2,6 +2,7 @@
 
 namespace app\controllers\admin;
 
+use app\controllers\BaseController;
 use app\models\Session;
 use app\models\SessionSearch;
 use yii\web\Controller;
@@ -11,7 +12,7 @@ use yii\filters\VerbFilter;
 /**
  * SessionController implements the CRUD actions for Session model.
  */
-class SessionController extends Controller
+class SessionController extends BaseController
 {
     /**
      * @inheritDoc
@@ -69,10 +70,10 @@ class SessionController extends Controller
     {
         $model = new Session();
 
-        if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
-            }
+        if ($this->isRequestPost()
+            && $model->load($this->getPostData())
+            && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('create', [
@@ -91,7 +92,9 @@ class SessionController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+        if ($this->isRequestPost()
+            && $model->load($this->getPostData())
+            && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
