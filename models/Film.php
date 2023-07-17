@@ -93,7 +93,7 @@ class Film extends ActiveRecord
 
         $this->createDirectoryIfNotExists();
 
-        $this->imageFile->saveAs($uploadDirectory . $this->id . '.' . $this->image);
+        $this->imageFile->saveAs($uploadDirectory . '/' . $this->id . '.' . $this->image);
     }
 
     /**
