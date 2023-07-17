@@ -1,6 +1,7 @@
 <?php
 
 use app\models\Film;
+use kartik\datetime\DateTimePicker;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -18,7 +19,11 @@ use yii\widgets\ActiveForm;
             ['prompt' => 'Select film']
     ) ?>
 
-    <?= $form->field($model, 'datetime')->widget(\kartik\datetime\DateTimePicker::class, []) ?>
+    <?= $form->field($model, 'datetime')->widget(DateTimePicker::class, [
+        'pluginOptions' => [
+            'format' => 'yyyy-mm-dd hh:mm:00'
+        ]
+    ]) ?>
 
     <?= $form->field($model, 'cost')->textInput() ?>
 
