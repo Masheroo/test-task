@@ -6,11 +6,10 @@ use app\models\forms\LoginForm;
 use app\models\Session;
 use Yii;
 use yii\filters\AccessControl;
-use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
 
-class SiteController extends Controller
+class SiteController extends BaseController
 {
     /**
      * {@inheritdoc}
@@ -74,22 +73,21 @@ class SiteController extends Controller
      */
     public function actionLogin()
     {
-        if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }
+        $this->redirectToHomeIfUserIsNotGuest();
 
         $loginForm = new LoginForm();
-        if (Yii::$app->request->post()){
-            if ($loginForm->load(Yii::$app->request->post())) {
-                if ($loginForm->login()){
 
-                    return $this->goBack();
+        if ($this->isRequestPost()) {
 
-                }
+            if ($loginForm->loginWithLoad()) {
+
+                return $this->goBack();
+
             }
         }
 
-        $loginForm->password = '';
+        $loginForm->resetPassword();
+
         return $this->render('login', [
             'model' => $loginForm,
         ]);

@@ -58,6 +58,16 @@ class LoginForm extends Model
      * Logs in a user using the provided username and password.
      * @return bool whether the user is logged in successfully
      */
+    public function loginWithLoad(): bool
+    {
+        return ($this->load($this->getPost()) && $this->login());
+    }
+
+    public function getPost()
+    {
+        return Yii::$app->request->post();
+    }
+
     public function login()
     {
         if ($this->validate()) {
@@ -78,5 +88,10 @@ class LoginForm extends Model
         }
 
         return $this->_user;
+    }
+
+    public function resetPassword(): void
+    {
+        $this->password = '';
     }
 }
