@@ -20,4 +20,9 @@ class BaseController extends Controller
     {
         return (bool)Yii::$app->request->post();
     }
+
+    public function getPostData()
+    {
+        return Yii::$app->request->post();
+    }
 }

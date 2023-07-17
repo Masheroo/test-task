@@ -2,24 +2,24 @@
 
 namespace app\controllers\admin;
 
+use app\controllers\BaseController;
 use app\models\Film;
 use app\models\FilmSearch;
-use app\models\forms\UploadImageForm;
 use yii\base\Exception;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
 use yii\web\UploadedFile;
 
 /**
  * FilmController implements the CRUD actions for Film model.
  */
-class FilmController extends Controller
+class FilmController extends BaseController
 {
     /**
      * @inheritDoc
      */
-    public function behaviors()
+    public function behaviors(): array
     {
         return array_merge(
             parent::behaviors(),
@@ -39,7 +39,7 @@ class FilmController extends Controller
      *
      * @return string
      */
-    public function actionIndex()
+    public function actionIndex(): string
     {
         $searchModel = new FilmSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
@@ -56,7 +56,7 @@ class FilmController extends Controller
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionView($id)
+    public function actionView($id): string
     {
         return $this->render('view', [
             'model' => $this->findModel($id),
@@ -66,20 +66,20 @@ class FilmController extends Controller
     /**
      * Creates a new Film model.
      * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return string|\yii\web\Response
+     * @return string|Response
      * @throws Exception
      */
-    public function actionCreate()
+    public function actionCreate(): Response|string
     {
         $film = new Film();
-        if ($this->request->isPost) {
-            if ($film->load($this->request->post())) {
-                $film->imageFile = UploadedFile::getInstance($film, 'imageFile');
-                $film->image = $film->getImageFileExtension();
-                if ($film->save()) {
-                    $film->saveImage();
-                    return $this->redirect(['view', 'id' => $film->id]);
-                }
+
+        if ($this->isRequestPost() && $film->load($this->getPostData())) {
+
+            $film->imageFile = UploadedFile::getInstance($film, Film::$imageFileLabel);
+
+            if ($film->save()) {
+
+                return $this->redirect(['view', 'id' => $film->id]);
 
             }
         }
@@ -93,20 +93,22 @@ class FilmController extends Controller
      * Updates an existing Film model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param int $id ID
-     * @return string|\yii\web\Response
+     * @return string|Response
      * @throws NotFoundHttpException if the model cannot be found
      * @throws Exception
      */
-    public function actionUpdate($id)
+    public function actionUpdate(int $id): Response|string
     {
         $film = $this->findModel($id);
 
-        if ($this->request->isPost && $film->load($this->request->post())) {
-            $film->imageFile = UploadedFile::getInstance($film, 'imageFile');
-            $film->image = $film->getImageFileExtension();
-            if ($film->save()){
-                $film->saveImage();
+        if ($this->isRequestPost() && $film->load($this->getPostData())) {
+
+            $film->imageFile = UploadedFile::getInstance($film, Film::$imageFileLabel);
+
+            if ($film->save()) {
+
                 return $this->redirect(['view', 'id' => $film->id]);
+
             }
         }
 
@@ -119,10 +121,10 @@ class FilmController extends Controller
      * Deletes an existing Film model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param int $id ID
-     * @return \yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
+     * @return Response
+     * @throws NotFoundHttpException
      */
-    public function actionDelete($id)
+    public function actionDelete(int $id): Response
     {
         $this->findModel($id)->delete();
 
@@ -136,7 +138,7 @@ class FilmController extends Controller
      * @return Film the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($id)
+    protected function findModel(int $id): Film
     {
         if (($model = Film::findOne(['id' => $id])) !== null) {
             return $model;

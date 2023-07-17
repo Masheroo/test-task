@@ -1,5 +1,6 @@
 <?php
 
+use app\models\Film;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -14,7 +15,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'imageFile')->fileInput() ?>
+    <?= $form->field($model, Film::$imageFileLabel)->fileInput() ?>
 
     <?= $form->field($model, 'description')->textarea(['rows' => 6]) ?>
 

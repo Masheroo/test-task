@@ -4,6 +4,7 @@ namespace app\models;
 
 use Yii;
 use yii\base\Exception;
+use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 use yii\helpers\BaseFileHelper;
 use yii\web\UploadedFile;
@@ -22,6 +23,7 @@ use yii\web\UploadedFile;
  */
 class Film extends ActiveRecord
 {
+    public static string $imageFileLabel = 'imageFile';
     public UploadedFile|string|null $imageFile = null;
 
     /**
@@ -66,9 +68,9 @@ class Film extends ActiveRecord
     /**
      * Gets query for [[Sessions]].
      *
-     * @return \yii\db\ActiveQuery
+     * @return ActiveQuery
      */
-    public function getSessions()
+    public function getSessions(): ActiveQuery
     {
         return $this->hasMany(Session::class, ['film_id' => 'id']);
     }
@@ -87,10 +89,40 @@ class Film extends ActiveRecord
      */
     public function saveImage(): void
     {
-        if (!file_exists(Yii::getAlias('@web') . 'uploads/film')){
-            BaseFileHelper::createDirectory(Yii::getAlias('@web'). 'uploads/film');
+        $uploadDirectory = $this->getUploadDirectory();
+
+        $this->createDirectoryIfNotExists();
+
+        $this->imageFile->saveAs($uploadDirectory . $this->id . '.' . $this->image);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function createDirectoryIfNotExists(): void
+    {
+        if (!file_exists($this->getUploadDirectory())) {
+            BaseFileHelper::createDirectory($this->getUploadDirectory());
         }
-        $this->imageFile->saveAs(Yii::getAlias('@web'). 'uploads/film/' . $this->id . '.' . $this->image);
+    }
+
+    public function getUploadDirectory(): string
+    {
+        return Yii::getAlias('@web') . 'uploads/film';
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function save($runValidation = true, $attributeNames = null): bool
+    {
+        $this->image = $this->getImageFileExtension();
+        if (parent::save($runValidation, $attributeNames)) {
+            $this->saveImage();
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }
