@@ -77,13 +77,8 @@ class SiteController extends BaseController
 
         $loginForm = new LoginForm();
 
-        if ($this->isRequestPost()) {
-
-            if ($loginForm->loginWithLoad()) {
-
-                return $this->goBack();
-
-            }
+        if ($this->isRequestPost() && $loginForm->loginWithLoad()) {
+            return $this->goBack();
         }
 
         $loginForm->resetPassword();
