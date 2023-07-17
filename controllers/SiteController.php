@@ -85,8 +85,6 @@ class SiteController extends Controller
                 if ($loginForm->login()){
 
                     return $this->goBack();
-                }else{
-                    return 'fa1lse';
 
                 }
             }
@@ -115,7 +113,5 @@ class SiteController extends Controller
      *
      * @return Response|string
      */
-
-
 
 }
