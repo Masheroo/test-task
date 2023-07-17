@@ -60,7 +60,8 @@ class SiteController extends BaseController
      */
     public function actionIndex()
     {
-        $sessions = Session::find()->all();
+        $sessions = Session::find()->with('film')->all();
+
         return $this->render('index', [
             'sessions' => $sessions
         ]);
