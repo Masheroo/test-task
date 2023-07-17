@@ -12,7 +12,7 @@ use yii\filters\VerbFilter;
 /**
  * SessionController implements the CRUD actions for Session model.
  */
-class SessionController extends BaseController
+class SessionController extends AdminController
 {
     /**
      * @inheritDoc

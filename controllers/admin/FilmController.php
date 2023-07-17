@@ -14,7 +14,7 @@ use yii\web\UploadedFile;
 /**
  * FilmController implements the CRUD actions for Film model.
  */
-class FilmController extends BaseController
+class FilmController extends AdminController
 {
     /**
      * @inheritDoc
