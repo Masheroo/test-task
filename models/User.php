@@ -53,33 +53,30 @@ class User extends ActiveRecord implements IdentityInterface
 
     }
 
-    public function validatePassword($password)
+    public function validatePassword($password): bool
     {
         return $this->password === $password;
     }
 
-    public static function findIdentity($id)
+    public static function findIdentity($id): User|IdentityInterface|null
     {
-        // TODO: Implement findIdentity() method.
+        return static::findOne($id);
     }
 
     public static function findIdentityByAccessToken($token, $type = null)
     {
-        // TODO: Implement findIdentityByAccessToken() method.
     }
 
-    public function getId()
+    public function getId(): int
     {
-        // TODO: Implement getId() method.
+        return $this->id;
     }
 
     public function getAuthKey()
     {
-        // TODO: Implement getAuthKey() method.
     }
 
     public function validateAuthKey($authKey)
     {
-        // TODO: Implement validateAuthKey() method.
     }
 }
